@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -22,5 +23,10 @@ func connectWithTelegram() {
 
 func main() {
 	connectWithTelegram()
+
+	updateConfig := tgbotapi.NewUpdate(0)
+	for update := range bot.GetUpdatesChan(updateConfig) {
+		if update.Message != nil && update.Message.Text =="/start" 
+	}
 
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"math/rand"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -53,12 +53,10 @@ var chatId int64
 func connectWithTelegram() {
 	var err error
 	var token string
-	bot, err = tgbotapi.NewBotAPI(token)
-	if err != nil {
-		log.Fatal("cannot connect to telegram")
-		_ = token
-
+	if bot, err = tgbotapi.NewBotAPI(token); err != nil {
+		panic("cannot connect to telegram")
 	}
+
 }
 
 func sendMessage(msg string) {
@@ -82,8 +80,15 @@ func isMessageToBot(update *tgbotapi.Update) bool {
 
 }
 
-func sendAnswer(update *tgbotapi.Update) {
+func getAnswer() string {
+	index := rand.Intn(len(answers))
+	return answers[index]
+}
 
+func sendAnswer(update *tgbotapi.Update) {
+	msg := tgbotapi.NewMessage(chatId, getAnswer())
+	msg.ReplyToMessageID = update.Message.MessageID
+	bot.Send(msg)
 }
 
 func main() {
